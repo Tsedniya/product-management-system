@@ -43,59 +43,79 @@ const getProducts = async (req,res) => {
  // POST /API/PRODUCTS
 
     const createProduct = async (req, res) => {
-    try {
-        const { name, description, price, category, stock, image } = req.body;
+  try {
+    const { name, description, price, category, stock, image } = req.body;
 
-        if (!name || !description || price === undefined || !category) {
-        return res.status(400).json({
-            message: "Name, description, price, and category are required",
-        });
-        }
-
-        const product = await Product.create({
-        name,
-        description,
-        price,
-        category,
-        stock,
-        image,
-        });
-
-        res.status(201).json(product);
-    } catch (error) {
-        res.status(500).json({
-        message: "Failed to create product",
-        error: error.message,
-        });
+    if (
+      name === undefined ||
+      description === undefined ||
+      price === undefined ||
+      category === undefined
+    ) {
+      return res.status(400).json({
+        message: "Name, description, price, and category are required",
+      });
     }
-    };
+
+    const product = await Product.create({
+      name,
+      description,
+      price,
+      category,
+      stock,
+      image,
+    });
+
+    res.status(201).json(product);
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: Object.values(error.errors).map((err) => err.message),
+      });
+    }
+
+    res.status(500).json({
+      message: "Failed to create product",
+      error: error.message,
+    });
+  }
+};
 
 // PUT /api/products/:id
 
- const updateProduct = async (req,res) => {
-    try{
-        const product = await Product.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            {
-                new:true,
-                runvalidators:true,
-            }
-        );
+ const updateProduct = async (req, res) => {
+  try {
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
-        if(!product){
-            return res.status(404).json({
-                message:"Product not found"
-            });
-        }
-        res.status(200).json(product);
-    } catch (error){
-        res.status(500).json({
-            message:"Product not found",
-            error: error.message,
-        });
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
     }
- };
+
+    res.status(200).json(product);
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: Object.values(error.errors).map((err) => err.message),
+      });
+    }
+
+    res.status(500).json({
+      message: "Failed to update product",
+      error: error.message,
+    });
+  }
+};
   
  // DELETE /api/products/:id
  const deleteProduct = async (req,res) =>{
