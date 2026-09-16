@@ -100,7 +100,7 @@ const getProducts = async (req,res) => {
  // DELETE /api/products/:id
  const deleteProduct = async (req,res) =>{
     try{
-        const product= await ProductfindByIdAndDelete(req.params.id)
+        const product= await Product.findByIdAndDelete(req.params.id)
 
         if (!product){
             return res.status(404).json({
