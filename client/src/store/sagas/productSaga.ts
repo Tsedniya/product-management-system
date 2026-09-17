@@ -1,6 +1,9 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { createProduct,getProducts } from "../../services/productApi";
-
+import {
+  createProduct,
+  getProducts,
+  updateProduct,
+} from "../../services/productApi";
 
 function* fetchProductsSaga(): Generator<any, void, any> {
   try {
@@ -23,14 +26,12 @@ function* fetchProductsSaga(): Generator<any, void, any> {
 
 function* createProductSaga(action: any): Generator<any, void, any> {
   try {
-    const product = yield call(createProduct, action.payload);
+    yield call(createProduct, action.payload);
 
     yield put({
       type: "CREATE_PRODUCT_SUCCESS",
-      payload: product,
     });
 
-    // Refresh the product list after creating
     yield put({
       type: "FETCH_PRODUCTS",
     });
@@ -45,8 +46,32 @@ function* createProductSaga(action: any): Generator<any, void, any> {
   }
 }
 
+function* updateProductSaga(action: any): Generator<any, void, any> {
+  try {
+    const { id, product } = action.payload;
+
+    yield call(updateProduct, id, product);
+
+    yield put({
+      type: "UPDATE_PRODUCT_SUCCESS",
+    });
+
+    yield put({
+      type: "FETCH_PRODUCTS",
+    });
+  } catch (error) {
+    yield put({
+      type: "UPDATE_PRODUCT_FAILURE",
+      payload:
+        error instanceof Error
+          ? error.message
+          : "Failed to update product",
+    });
+  }
+}
+
 export default function* productSaga() {
   yield takeLatest("FETCH_PRODUCTS", fetchProductsSaga);
   yield takeLatest("CREATE_PRODUCT", createProductSaga);
-
+  yield takeLatest("UPDATE_PRODUCT", updateProductSaga);
 }

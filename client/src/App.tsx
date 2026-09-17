@@ -1,4 +1,4 @@
-
+import ProductList from "./components/ProductList";
 import AddProductForm from "./components/AddProductForm";
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
       <h1>Product Management System</h1>
 
       <AddProductForm />
-
+      <ProductList />
      
     </div>
   );

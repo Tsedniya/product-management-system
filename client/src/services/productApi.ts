@@ -28,3 +28,22 @@ export const createProduct = async (product: Omit<Product, "_id">): Promise<Prod
     return response.json();
 
 }
+
+export const updateProduct = async (
+  id: string,
+  product: Omit<Product, "_id">
+): Promise<Product> => {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(product),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update product");
+  }
+
+  return response.json();
+};
