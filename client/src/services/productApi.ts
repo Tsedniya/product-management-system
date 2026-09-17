@@ -11,3 +11,20 @@ export const getProducts = async (): Promise<Product[]> => {
 
   return response.json();
 };
+
+export const createProduct = async (product: Omit<Product, "_id">): Promise<Product> => {
+    const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(product),
+    });
+
+    if(!response.ok){
+        throw new Error("Failed to create product");
+    }
+
+    return response.json();
+
+}
