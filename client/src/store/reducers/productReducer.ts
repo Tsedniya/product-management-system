@@ -58,6 +58,26 @@ const productReducer = (
         error: action.payload,
       };
 
+    case "UPDATE_PRODUCT":
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+
+    case "UPDATE_PRODUCT_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+      };
+
+    case "UPDATE_PRODUCT_FAILURE":
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
     default:
       return state;
   }
