@@ -1,6 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
   createProduct,
+  deleteProduct,
   getProducts,
   updateProduct,
 } from "../../services/productApi";
@@ -70,8 +71,34 @@ function* updateProductSaga(action: any): Generator<any, void, any> {
   }
 }
 
+ 
+function* deleteProductSaga(action: any): Generator<any, void, any> {
+  try {
+    const { id } = action.payload;
+
+    yield call(deleteProduct, id);
+
+    yield put({
+      type: "DELETE_PRODUCT_SUCCESS",
+    });
+
+    yield put({
+      type: "FETCH_PRODUCTS",
+    });
+  } catch (error) {
+    yield put({
+      type: "DELETE_PRODUCT_FAILURE",
+      payload:
+        error instanceof Error
+          ? error.message
+          : "Failed to delete product",
+    });
+  }
+}
+
 export default function* productSaga() {
   yield takeLatest("FETCH_PRODUCTS", fetchProductsSaga);
   yield takeLatest("CREATE_PRODUCT", createProductSaga);
   yield takeLatest("UPDATE_PRODUCT", updateProductSaga);
+  yield takeLatest("DELETE_PRODUCT", deleteProductSaga);
 }

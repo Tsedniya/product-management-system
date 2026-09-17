@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { Product } from "../types/product";
-import { fetchProducts } from "../store/actions/productActions";
+import {
+  fetchProducts,
+  deleteProduct,
+} from "../store/actions/productActions";
 import EditProductForm from "./EditProductForm";
 
 const ProductList = () => {
@@ -44,11 +47,8 @@ const ProductList = () => {
         />
       )}
 
-      {products.length === 0 ? (
-        <p>No products found.</p>
-      ) : (
-        products.map((product) => (
-          <div key={product._id}>
+      {products.map((product) => (
+        <div key={product._id}>
             <h3>{product.name}</h3>
             <p>{product.description}</p>
             <p>Price: {product.price}</p>
@@ -56,11 +56,14 @@ const ProductList = () => {
             <p>Stock: {product.stock}</p>
 
             <button onClick={() => setEditingProduct(product)}>
-              Edit
+            Edit
             </button>
-          </div>
-        ))
-      )}
+
+            <button onClick={() => dispatch(deleteProduct(product._id))}>
+            Delete
+            </button>
+        </div>
+        ))}
     </div>
   );
 };

@@ -77,6 +77,25 @@ const productReducer = (
         loading: false,
         error: action.payload,
       };
+    case "DELETE_PRODUCT":
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+
+    case "DELETE_PRODUCT_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+      };
+
+    case "DELETE_PRODUCT_FAILURE":
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
 
     default:
       return state;

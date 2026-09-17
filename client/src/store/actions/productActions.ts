@@ -1,6 +1,8 @@
 export const FETCH_PRODUCTS = "FETCH_PRODUCTS";
 export const CREATE_PRODUCT = "CREATE_PRODUCT";
 export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
+export const DELETE_PRODUCT = "DELETE_PRODUCT";
+
 
 export const fetchProducts = () => ({
   type: FETCH_PRODUCTS,
@@ -33,5 +35,12 @@ export const updateProduct = (
   payload: {
     id,
     product,
+  },
+});
+
+export const deleteProduct = (id: string) => ({
+  type: DELETE_PRODUCT,
+  payload: {
+    id,
   },
 });
